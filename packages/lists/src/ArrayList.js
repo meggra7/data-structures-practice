@@ -15,6 +15,9 @@ class ArrayList {
    *  of that size can be preallocated.
    */
   constructor(initialCapacity = 10) {
+    this._arrayList = getFixedArray(initialCapacity);
+    this._capacity = initialCapacity;
+    this._size = 0;
   }
 
   /***********************
@@ -32,6 +35,35 @@ class ArrayList {
    *  @spaceComplexity O(1) - most of the time.  Possible worst case of O(n).
    */
   insert(i, item) {
+
+    if (i <= this._size) {
+      // Index is within bounds...
+      if (item != null) {
+        // ...and item isn't null. Ok to proceed.
+
+        // Check if room to insert.
+        if (this._size === this._capacity) {
+          // Capacity is met. Increase size of array.
+          this.increaseArraySize();
+        }
+
+        // Loop from end until insertion index, shifting existing items ahead by 1.
+        for (let indexToShift = this._size - 1; indexToShift >= i; indexToShift--) {
+          this._arrayList[indexToShift + 1] = this._arrayList[indexToShift];
+        }
+
+        // Set new item at insertion index
+        this._arrayList[i] = item;
+
+        // Increase size
+        this._size++;
+
+      } else {
+        throw new Error("Insertion error; item is null or undefined");
+      }
+    } else {
+      throw new Error("Insertion error; index out of bounds");
+    }
   }
 
   /**
@@ -46,6 +78,24 @@ class ArrayList {
    *  @spaceComplexity O(1) - most of the time.  Possible worst case of O(n)
    */
   append(item) {
+
+    if (item != null) {
+
+      // Check if room to insert.
+      if (this._size === this._capacity) {
+        // Capacity is met. Increase size of array.
+        this.increaseArraySize();
+      }
+
+      // Add item to next open space in the array
+      this._arrayList[this._size] = item;
+
+      // Increase size
+      this._size++;
+
+    } else {
+      throw new Error("Error appending item; item is null or undefined.");
+    }
   }
 
   /**
@@ -60,6 +110,29 @@ class ArrayList {
    *  @spaceComplexity O(1) - most of the time.  Possible worst case of O(n).
    */
   prepend(item) {
+
+    if (item != null) {
+
+      // Check if room to insert.
+      if (this._size === this._capacity) {
+        // Capacity is met. Increase size of array.
+        this.increaseArraySize();
+      }
+
+      // Shift all existing items ahead by 1.
+      for (let indexToShift = this._size - 1; indexToShift >= 0; indexToShift--) {
+        this._arrayList[indexToShift + 1] = this._arrayList[indexToShift];
+      }
+
+      // Set new item at initial index
+      this._arrayList[0] = item;
+
+      // Increase size
+      this._size++;
+
+    } else {
+      throw new Error("Error prepending item; item is null or undefined.");
+    }
   }
 
   /*********************
@@ -76,7 +149,32 @@ class ArrayList {
    *  @spaceComplexity O(1)
    */
   remove(i) {
-    return null;
+
+    if (i < this._size) {
+
+      let itemToRemove = this._arrayList[i];
+
+      // Loop from removal index forward, shifting existing items back by 1.
+      for (let indexToShift = i; indexToShift < this._size; indexToShift++) {
+
+        if (indexToShift !== this._size - 1) {
+          // If not yet at the end, shift items back
+          this._arrayList[indexToShift] = this._arrayList[indexToShift + 1];
+        } else {
+          // If at end, nullify final index
+          this._arrayList[indexToShift] = null;
+        }
+      }
+
+      // Decrease size
+      this._size--;
+
+      // Return removed item
+      return itemToRemove;
+
+    } else {
+      throw new Error("Error removing item; index out of bounds.");
+    }
   }
 
   /**
@@ -89,7 +187,33 @@ class ArrayList {
    *  @spaceComplexity O(1)
    */
   removeFirst() {
-    return null;
+
+    if (this._size !== 0) {
+
+      let itemToRemove = this._arrayList[0];
+
+      // Shift all existing items back by 1.
+      for (let indexToShift = 0; indexToShift < this._size; indexToShift++) {
+
+        if (indexToShift !== this._size - 1) {
+          // If not yet at the end, shift item back
+          this._arrayList[indexToShift] = this._arrayList[indexToShift + 1];
+        } else {
+          // If at end, nullify final index
+          this._arrayList[indexToShift] = null;
+        }
+      }
+
+      // Decrease size
+      this._size--;
+
+      // Return removed item
+      return itemToRemove;
+
+    } else {
+      // List is empty.
+      return null;
+    }
   }
 
   /**
@@ -102,7 +226,24 @@ class ArrayList {
    *  @spaceComplexity O(1)
    */
   removeLast() {
-    return null;
+
+    if (this._size !== 0) {
+
+      let itemToRemove = this._arrayList[this._size - 1];
+
+      // Nullify final index
+      this._arrayList[this._size - 1];
+
+      // Decrease size
+      this._size--;
+
+      // Return removed item
+      return itemToRemove;
+
+    } else {
+      // List is empty.
+      return null;
+    }
   }
 
   /**
@@ -115,13 +256,24 @@ class ArrayList {
    *  @spaceComplexity O(1)
    */
   removeItem(item) {
+
+    // Loop through all items from beginning
+    for (let i = 0; i < this._size; i++) {
+      if (this._arrayList[i].equals(item)) {
+        // Matching item found. Remove it and return index where it was found
+        this.remove(i);
+        return i;
+      }
+    }
+
+    // Item not found. Return -1
     return -1;
   }
 
   /*****************
    * Interrogation *
    *****************/
-  
+
   /**
    *  Returns true if the passed item is in the list, or false otherwise.
    *  
@@ -131,6 +283,16 @@ class ArrayList {
    *  @spaceComplexity O(1)
    */
   contains(item) {
+
+    // Loop through all items from beginning
+    for (let i = 0; i < this._size; i++) {
+      if (this._arrayList[i].equals(item)) {
+        // Matching item found.
+        return true;
+      }
+    }
+
+    // Item not found.
     return false;
   }
 
@@ -144,7 +306,12 @@ class ArrayList {
    *  @spaceComplexity O(1)
    */
   peek(i) {
-    return null;
+
+    if (i < this._size) {
+      return this._arrayList[i];
+    } else {
+      throw new Error("Error peeking at item; index is out of bounds.");
+    }
   }
 
   /**
@@ -157,7 +324,7 @@ class ArrayList {
    *  @spaceComplexity O(1)
    */
   peekFirst() {
-    return null;
+    return this._arrayList[0];
   }
 
   /**
@@ -170,7 +337,11 @@ class ArrayList {
    *  @spaceComplexity O(1)
    */
   peekLast() {
-    return null;
+    if (this._size !== 0) {
+      return this._arrayList[this._size - 1];
+    } else {
+      return null;
+    }
   }
 
   /**
@@ -180,7 +351,7 @@ class ArrayList {
    *  @timeComplexity O(1)
    */
   size() {
-    return 0;
+    return this._size;
   }
 
   /******************
@@ -200,6 +371,7 @@ class ArrayList {
    *  @spaceComplexity O(log n)
    */
   sort(comparator) {
+    this._arrayList = this.toArray().sort(comparator);
   }
 
   /**
@@ -215,7 +387,7 @@ class ArrayList {
    *  @spaceComplexity O(n)
    */
   sorted(comparator) {
-    return new ArrayList();
+    return this.toArray().sort(comparator);
   }
 
   /**
@@ -226,7 +398,32 @@ class ArrayList {
    *  @spaceComplexity O(n)
    */
   toArray() {
-    return [];
+
+    // Initialize array of exact size
+    let arrayToReturn = getFixedArray(this._size);
+
+    // Copy over all items
+    for (let i = 0; i < this._size; i++) {
+      arrayToReturn[i] = this._arrayList[i];
+    }
+
+    // Return array of exact size (no empty spaces at end)
+    return arrayToReturn;
+  }
+
+  /**
+   *  Helper method to increase size of fixed array as needed when inserting, appending, or prepending.
+   */
+  increaseArraySize() {
+    // Double size of array...
+    this._capacity *= 2;
+    let largerArray = getFixedArray(this._capacity);
+    // ...and copy all current items.
+    for (let indexToCopy = 0; indexToCopy < this._size; indexToCopy++) {
+      largerArray[indexToCopy] = this._arrayList[indexToCopy];
+    }
+    // Store larger array.
+    this._arrayList = largerArray;
   }
 }
 

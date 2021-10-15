@@ -4,3 +4,4 @@ report.html
 packages/*/report.html
 node_modules
 packages/*/node_modules
+.venv

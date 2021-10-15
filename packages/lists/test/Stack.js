@@ -12,7 +12,9 @@ const referenceImplementations = [
 ];
 
 const userImplementations = [
-  require('../src/Stack')
+  require('../src/Stack'),
+  require('../src/StackUsingArray'),
+  require('../src/StackUsingLinkedList')
 ];
 
 const anItem = new Item();
@@ -142,18 +144,18 @@ describe('Stack', () => {
 const randomStepGenerators = [
 
   //push(item)
-  function(before) {
+  function (before) {
     const item = new Item();
     return {
       name: 'push',
-      args: [ item ],
+      args: [item],
       returnValue: undefined,
-      result: [ item, ...before ],
+      result: [item, ...before],
     }
   },
 
   //pop()
-  function(before) {
+  function (before) {
     if (before.length < 1) {
       return {
         name: 'pop',
@@ -171,7 +173,7 @@ const randomStepGenerators = [
   },
 
   //peek()
-  function(before) {
+  function (before) {
     if (before.length < 1) {
       return {
         name: 'peek',
@@ -189,7 +191,7 @@ const randomStepGenerators = [
   },
 
   //isEmpty()
-  function(before) {
+  function (before) {
     return {
       name: 'isEmpty',
       args: [],

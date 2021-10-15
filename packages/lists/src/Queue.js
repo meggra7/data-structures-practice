@@ -8,8 +8,10 @@ class Queue {
    *  Queue Constructors take no arguments
    */
   constructor() {
+    this._head;
+    this._tail;
   }
-  
+
   /****************
    * MODIFICATION *
    ****************/
@@ -22,6 +24,28 @@ class Queue {
    *  @spaceComplexity O(1)
    */
   enqueue(item) {
+
+    // Make sure item is valid
+    if (item != null) {
+
+      let nodeToAdd = {
+        data: item,
+        next: null
+      };
+
+      if (this._head == null) {
+        // Queue is empty, set as front of queue
+        this._head = nodeToAdd;
+      } else {
+        // Queue isn't empty, add reference to current end of queue
+        this._tail.next = nodeToAdd;
+      }
+
+      // Set as end of queue
+      this._tail = nodeToAdd;
+    } else {
+      throw new Error("Error queueing item; item is null");
+    }
   }
 
   /**
@@ -33,6 +57,13 @@ class Queue {
    *  @spaceComplexity O(1)
    */
   dequeue() {
+    if (this._head != null) {
+      let itemToReturn = this._head.data;
+      this._head = this._head.next;
+      return itemToReturn;
+    } else {
+      throw new Error("Error dequeueing item; queue is empty");
+    }
   }
 
   /*****************
@@ -48,6 +79,11 @@ class Queue {
    *  @spaceComplexity O(1)
    */
   peek() {
+    if (this._head != null) {
+      return this._head.data;
+    } else {
+      throw new Error("Error peeking at queue; queue is empty");
+    }
   }
 
   /**
@@ -58,6 +94,7 @@ class Queue {
    *  @spaceComplexity O(1)
    */
   isEmpty() {
+    return this._head == null;
   }
 }
 

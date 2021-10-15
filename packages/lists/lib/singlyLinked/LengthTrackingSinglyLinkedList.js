@@ -27,7 +27,7 @@ class LengthTrackingSinglyLinkedList {
 
     // Get the i-1st node - or the node that should be
     // before the new node. This operation is O(n)
-    const previous = this._getNthNode(i-1);
+    const previous = this._getNthNode(i - 1);
 
     // If we've walked off the end of the array, that's an error.
     if (previous === null) {
@@ -58,7 +58,7 @@ class LengthTrackingSinglyLinkedList {
     }
     //Otherwise, just walk down the list until the next node is null
     let current = this._head;
-    while(current.next !== null) {
+    while (current.next !== null) {
       current = current.next;
     }
     // create a new node with no next node, and set it as the current node's next.
@@ -164,7 +164,7 @@ class LengthTrackingSinglyLinkedList {
     }
     let current = this._head,
       position = 0;
-    while(current.next !== null && !current.next.item.equals(item)) {
+    while (current.next !== null && !current.next.item.equals(item)) {
       position++;
       current = current.next;
     }
@@ -179,7 +179,7 @@ class LengthTrackingSinglyLinkedList {
   /*****************
    * Interrogation *
    *****************/
-  
+
   /**
    *  Returns true if the passed item is in the list, or false otherwise.
    *  
@@ -307,11 +307,11 @@ class LengthTrackingSinglyLinkedList {
     return toReturn;
   }
 
-   /**
-    *  Private function to get the nth node, or null if no such node exists.
-    *  @timeComplexity O(n)
-    *  @spaceComplexity O(1)
-    */
+  /**
+   *  Private function to get the nth node, or null if no such node exists.
+   *  @timeComplexity O(n)
+   *  @spaceComplexity O(1)
+   */
   _getNthNode(n) {
     // grab the head and keeping track of our 
     // current position
@@ -328,7 +328,7 @@ class LengthTrackingSinglyLinkedList {
 
     return current;
   }
-      
+
   /**
    *  The first operation in merge sort is to split the list in half.
    *  
@@ -389,7 +389,7 @@ class LengthTrackingSinglyLinkedList {
     // list.
     let curr = toReturn;
     // As long as neither left nor right lists are empty...
-    while(left !== null && right !== null) {
+    while (left !== null && right !== null) {
       // if the smallest item on the left list is smaller than
       // the smallest item on the right list....
       if (comparator(left.item, right.item) <= 0) {

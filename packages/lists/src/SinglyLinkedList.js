@@ -10,6 +10,8 @@ class SinglyLinkedList {
    *  Traditionally, LinkedLists don't have much in the way of construction
    */
   constructor() {
+    this._head = null;
+    this._length = 0;
   }
 
   /***********************
@@ -27,6 +29,53 @@ class SinglyLinkedList {
    *  @spaceComplexity O(1)
    */
   insert(i, item) {
+
+    if (item != null) {
+      // Valid item. Ok to continue.
+
+      if (i >= 0 && i <= this._length) {
+        // Index is within range. Ok to continue.
+
+        // Create node to insert
+        const nodeToAdd = {
+          item: item,
+          next: null
+        }
+
+        if (i === 0) {
+
+          // Inserting at front of list. Update head only and finish.
+          nodeToAdd.next = this._head;
+          this._head = nodeToAdd;
+
+        } else {
+
+          // Initialize starting / current item as head...
+          let currentNode = this._head;
+
+          // ...and iterate through rest of list from head to tail.
+          for (let position = 0; position < i; position++) {
+
+            if (i === position + 1) {
+              // Insert after current item
+              nodeToAdd.next = currentNode.next;
+              currentNode.next = nodeToAdd;
+            }
+
+            // Move to next item
+            currentNode = currentNode.next;
+          }
+        }
+
+        // Increase length
+        this._length++;
+
+      } else {
+        throw new Error("Error inserting item; index is out of bounds.");
+      }
+    } else {
+      throw new Error("Error inserting item; item is null or undefined.");
+    }
   }
 
   /**
@@ -41,6 +90,12 @@ class SinglyLinkedList {
    *  @spaceComplexity O(1)
    */
   append(item) {
+
+    if (item != null) {
+      this.insert(this._length, item);
+    } else {
+      throw new Error("Error appending item; item is null or undefined.")
+    }
   }
 
   /**
@@ -55,6 +110,13 @@ class SinglyLinkedList {
    *  @spaceComplexity O(1)
    */
   prepend(item) {
+
+    if (item != null) {
+      this.insert(0, item);
+    } else {
+      throw new Error("Error prepending item; item is null or undefined.")
+    }
+
   }
 
   /*********************
@@ -71,7 +133,50 @@ class SinglyLinkedList {
    *  @spaceComplexity O(1)
    */
   remove(i) {
-    return null;
+
+    if (i >= 0 && i < this._length) {
+      // Index in bounds. Ok to continue.
+
+      if (i === 0) {
+
+        // Removing head. Get item and update head reference only.
+        const itemToRemove = this._head.item;
+        this._head = this._head.next;
+
+        // Decrease length
+        this._length--;
+
+        // Return removed item
+        return itemToRemove;
+
+      } else {
+
+        // Initialize starting / current item as head...
+        let currentNode = this._head;
+
+        // ...and iterate through rest of list from head until index reached.
+        for (let position = 0; position < i; position++) {
+
+          if (i === position + 1) {
+
+            // Get item and update reference to following node instead
+            const itemToRemove = currentNode.next.item;
+            currentNode.next = currentNode.next.next;
+
+            // Decrease length
+            this._length--;
+
+            // Return removed item
+            return itemToRemove;
+          }
+
+          // Move to next item
+          currentNode = currentNode.next;
+        }
+      }
+    } else {
+      throw new Error("Error removing item; index out of bounds.")
+    }
   }
 
   /**
@@ -84,7 +189,11 @@ class SinglyLinkedList {
    *  @spaceComplexity O(1)
    */
   removeFirst() {
-    return null;
+    if (this._length > 0) {
+      this.remove(0);
+    } else {
+      return null;
+    }
   }
 
   /**
@@ -97,7 +206,11 @@ class SinglyLinkedList {
    *  @spaceComplexity O(1)
    */
   removeLast() {
-    return null;
+    if (this._length > 0) {
+      this.remove(this._length - 1);
+    } else {
+      return null;
+    }
   }
 
   /**
@@ -110,13 +223,27 @@ class SinglyLinkedList {
    *  @spaceComplexity O(1)
    */
   removeItem(item) {
+
+    let currentNode = this._head;
+
+    for (let index = 0; index < this._length; index++) {
+
+      if (currentNode.item.equals(item)) {
+        // Match found. Return index.
+        return index;
+      }
+
+      currentNode = currentNode.next;
+    }
+
+    // If item not found by end of loop return -1.
     return -1;
   }
 
   /*****************
    * Interrogation *
    *****************/
-  
+
   /**
    *  Returns true if the passed item is in the list, or false otherwise.
    *  
@@ -126,6 +253,20 @@ class SinglyLinkedList {
    *  @spaceComplexity O(1)
    */
   contains(item) {
+
+    let currentNode = this._head;
+
+    for (let index = 0; index < this._length; index++) {
+
+      if (currentNode.item.equals(item)) {
+        // Match found. Return true.
+        return true;
+      }
+
+      currentNode = currentNode.next;
+    }
+
+    // If item not found by end of loop return false.
     return false;
   }
 
@@ -139,7 +280,27 @@ class SinglyLinkedList {
    *  @spaceComplexity O(1)
    */
   peek(i) {
-    return null;
+
+    if (i >= 0 && i < this._length) {
+      // Index in bounds. Ok to continue.
+
+      // Get first node
+      let currentNode = this._head;
+
+      // Iterate through list until item reached
+      for (let position = 0; position < this._length; position++) {
+
+        if (position === i) {
+          // Index reached. Return item.
+          return currentNode.item;
+        }
+
+        // Update to next node
+        currentNode = currentNode.next;
+      }
+    } else {
+      throw new Error("Error peeking list; index out of bounds.")
+    }
   }
 
   /**
@@ -152,7 +313,12 @@ class SinglyLinkedList {
    *  @spaceComplexity O(1)
    */
   peekFirst() {
-    return null;
+
+    if (this._length > 0) {
+      return this._head.item;
+    } else {
+      return null;
+    }
   }
 
   /**
@@ -165,7 +331,11 @@ class SinglyLinkedList {
    *  @spaceComplexity O(1)
    */
   peekLast() {
-    return null;
+    if (this._length > 0) {
+      return this.peek(this._length - 1);
+    } else {
+      return null;
+    }
   }
 
   /**
@@ -175,7 +345,7 @@ class SinglyLinkedList {
    *  @timeComplexity O(n) in a naive implementation - possibly O(1)
    */
   size() {
-    return 0;
+    return this._length;
   }
 
   /******************
