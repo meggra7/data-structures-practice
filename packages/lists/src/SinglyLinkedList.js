@@ -190,7 +190,7 @@ class SinglyLinkedList {
    */
   removeFirst() {
     if (this._length > 0) {
-      this.remove(0);
+      return this.remove(0);
     } else {
       return null;
     }
@@ -207,7 +207,7 @@ class SinglyLinkedList {
    */
   removeLast() {
     if (this._length > 0) {
-      this.remove(this._length - 1);
+      return this.remove(this._length - 1);
     } else {
       return null;
     }
@@ -229,7 +229,8 @@ class SinglyLinkedList {
     for (let index = 0; index < this._length; index++) {
 
       if (currentNode.item.equals(item)) {
-        // Match found. Return index.
+        // Match found. Remove item and return index.
+        this.remove(index);
         return index;
       }
 
@@ -393,7 +394,25 @@ class SinglyLinkedList {
    *  @spaceComplexity O(n)
    */
   toArray() {
-    return [];
+
+    // Initialize array and starting node
+    let arrayToReturn = [];
+    let currentNode = this._head;
+
+    // Return early if list is empty
+    if (this._head === null) {
+      return arrayToReturn;
+    } else {
+
+      // Otherwise, iterate through all nodes and add each item to the array
+      for (let index = 0; index < this._length; index++) {
+        arrayToReturn.push(currentNode.item);
+        currentNode = currentNode.next;
+      }
+
+      // Return the array
+      return arrayToReturn;
+    }
   }
 }
 
