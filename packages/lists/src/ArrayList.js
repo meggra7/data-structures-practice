@@ -375,8 +375,12 @@ class ArrayList {
     // Only sort if list has at least 2 values or more
     if (this._size > 1) {
 
-      // Quick sort option, call from 0 through current size of array
-      this._quickSort(0, this._size - 1, comparator);
+      // Bubble sort option
+      this._bubbleSort(comparator);
+
+      // // Quick sort option, call from 0 through current size of array
+      // this._quickSort(0, this._size - 1, comparator);
+
     }
   }
 
@@ -428,6 +432,33 @@ class ArrayList {
 
     // Return array of exact size (no empty spaces at end)
     return arrayToReturn;
+  }
+
+
+  _bubbleSort(comparator) {
+
+    // Initialize ending index
+    let finalIndex = this._size - 1;
+
+    // Iterate through list once per index
+    while (finalIndex > 0) {
+
+      // Initialize starting index
+      let currentIndex = 0;
+
+      // Complete iteration by comparing each value to the final index, and swapping values as needed to place in relative order
+      while (currentIndex < finalIndex) {
+
+        if (comparator(this._arrayList[currentIndex], this._arrayList[finalIndex]) > 0) {
+          const tmp = this._arrayList[currentIndex];
+          this._arrayList[currentIndex] = this._arrayList[finalIndex];
+          this._arrayList[finalIndex] = tmp;
+        }
+
+        currentIndex++;
+      }
+      finalIndex--
+    }
   }
 
   _quickSort(initialStartIndex, initialPivotIndex, comparator) {
