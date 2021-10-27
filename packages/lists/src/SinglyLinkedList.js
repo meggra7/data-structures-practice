@@ -368,6 +368,12 @@ class SinglyLinkedList {
    *    O(n) in the time optimized version
    */
   sort(comparator) {
+
+    // Only sort if more than one value in list
+    if (this.size() > 1) {
+      // Bubble sort option
+      this._bubbleSort(comparator);
+    }
   }
 
   /**
@@ -383,7 +389,42 @@ class SinglyLinkedList {
    *  @spaceComplexity O(n)
    */
   sorted(comparator) {
-    return new SinglyLinkedList();
+
+    // Initialize new instance of the list
+    let newList = new SinglyLinkedList();
+
+    // If list not empty, copy over values and sort
+    if (this._length > 0) {
+
+      // Copy over head and length
+      newList._head = {
+        item: this._head.item,
+        next: this._head.next
+      };
+      newList._length = this._length;
+
+      // Set heads as starting points and walk through all nodes
+      let existingNode = this._head;
+      let newNode = newList._head;
+      while (existingNode.next != null) {
+
+        // Copy values
+        newNode.next = {
+          item: existingNode.next.item,
+          next: existingNode.next.next
+        }
+
+        // Step forward
+        existingNode = existingNode.next;
+        newNode = newNode.next;
+      }
+
+      // Sort the new list
+      newList.sort(comparator);
+    }
+
+    // Return new list
+    return newList;
   }
 
   /**
@@ -412,6 +453,33 @@ class SinglyLinkedList {
 
       // Return the array
       return arrayToReturn;
+    }
+  }
+
+  _bubbleSort(comparator) {
+
+    // Initialize number of iterations to be completed.
+    let iterationsRemaining = this.size() - 1;
+    while (iterationsRemaining > 0) {
+
+      // Get starting node
+      let currentNode = this._head;
+
+      // Compare starting node with each subsequent node for each remaining value (will be equivalent to iterations remaining)
+      for (let position = 0; position < iterationsRemaining; position++) {
+
+        // Compare current node's item with next node's item
+        // Swap values if needed
+        if (comparator(currentNode.item, currentNode.next.item) > 0) {
+          const tmp = currentNode.item;
+          currentNode.item = currentNode.next.item;
+          currentNode.next.item = tmp;
+        }
+
+        // Update current node to be next node
+        currentNode = currentNode.next;
+      }
+      iterationsRemaining--;
     }
   }
 }
