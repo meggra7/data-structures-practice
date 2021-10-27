@@ -378,9 +378,16 @@ class ArrayList {
       // Bubble sort option
       this._bubbleSort(comparator);
 
+      // Merge sort option
+      // Get values in order as a new list
+      const sortedList = this._mergeSort(this.toArray(), comparator);
+      // Inject new values into stored list
+      for (let i = 0; i < this._size; i++) {
+        this._arrayList[i] = sortedList[i];
+      }
+
       // // Quick sort option, call from 0 through current size of array
       // this._quickSort(0, this._size - 1, comparator);
-
     }
   }
 
@@ -458,6 +465,52 @@ class ArrayList {
         currentIndex++;
       }
       finalIndex--
+    }
+  }
+
+  _mergeSort(array, comparator) {
+
+    // Only sort if more than one value
+    if (array.size > 1) {
+
+      // Recursively sort each half of the array list, slicing at the midpoint
+      let midpoint = array.size / 2;
+      let leftArray = this._mergeSort(array.slice(0, midpoint), comparator);
+      let rightArray = this._mergeSort(array.slice(midpoint, array.size(), comparator));
+
+      // Initialize new array to build back, along with pointers to traverse each half of the array
+      sortedArray = [];
+      leftPointer = 0;
+      rightPointer = 0;
+
+      // As long as both halves have remaining values, compare the first value of each and add the lesser of the two
+      while (leftPointer < leftArray.size() && rightPointer < rightArray.size()) {
+        if (comparator(leftArray[leftPointer], rightArray[rightPointer]) < 0) {
+          sortedArray.append(leftArray[leftPointer]);
+          leftPointer++;
+        } else {
+          sortedArray.append(rightArray[rightPointer]);
+          rightPointer++;
+        }
+      }
+
+      // If values still remain on the left side only, append all to the array builder
+      while (leftPointer < leftArray.size()) {
+        sortedArray.append(leftArray[leftPointer]);
+        leftPointer++;
+      }
+
+      // If values still remain on the right side only, append all to the array builder
+      while (rightPointer < rightArray.size()) {
+        sortedArray.append(rightArray[rightPointer]);
+        rightPointer++;
+      }
+
+      return sortedArray;
+
+    } else {
+
+      return array;
     }
   }
 
