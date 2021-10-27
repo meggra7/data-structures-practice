@@ -44,7 +44,7 @@ class ArrayList {
         // Check if room to insert.
         if (this._size === this._capacity) {
           // Capacity is met. Increase size of array.
-          this.increaseArraySize();
+          this._increaseArraySize();
         }
 
         // Loop from end until insertion index, shifting existing items ahead by 1.
@@ -84,7 +84,7 @@ class ArrayList {
       // Check if room to insert.
       if (this._size === this._capacity) {
         // Capacity is met. Increase size of array.
-        this.increaseArraySize();
+        this._increaseArraySize();
       }
 
       // Add item to next open space in the array
@@ -116,7 +116,7 @@ class ArrayList {
       // Check if room to insert.
       if (this._size === this._capacity) {
         // Capacity is met. Increase size of array.
-        this.increaseArraySize();
+        this._increaseArraySize();
       }
 
       // Shift all existing items ahead by 1.
@@ -371,7 +371,13 @@ class ArrayList {
    *  @spaceComplexity O(log n)
    */
   sort(comparator) {
-    this._arrayList = this.toArray().sort(comparator);
+
+    // Only sort if list has at least 2 values or more
+    if (this._size > 1) {
+
+      // Quick sort option, call from 0 through current size of array
+      this._quickSort(0, this._size - 1, comparator);
+    }
   }
 
   /**
@@ -387,7 +393,20 @@ class ArrayList {
    *  @spaceComplexity O(n)
    */
   sorted(comparator) {
-    return this.toArray().sort(comparator);
+
+    // Initialize new instance of the list
+    let newList = new ArrayList(this._size);
+
+    // Copy over all values to the new instance
+    for (let i = 0; i < this._size; i++) {
+      newList.append(this._arrayList[i]);
+    }
+
+    // Sort the new list
+    newList.sort(comparator);
+
+    // Return sorted array.
+    return newList;
   }
 
   /**
@@ -411,10 +430,52 @@ class ArrayList {
     return arrayToReturn;
   }
 
+  _quickSort(initialStartIndex, initialPivotIndex, comparator) {
+
+    let startIndex = initialStartIndex;
+    let pivotIndex = initialPivotIndex;
+
+    // Work your way from both ends inward until the pivot has compared all values
+    while (pivotIndex > startIndex) {
+
+      // Compare pivot value to starting value.
+      if (comparator(this._arrayList[pivotIndex], this._arrayList[startIndex]) > 0) {
+
+        // If pivot is greater than start, values already in relative order. Move up starting index.
+        startIndex++;
+
+      } else {
+
+        // Otherwise, values out of relative order. 
+        // Shift down the pivot and insert the start value above it.
+        // (Reassign value directly below the pivot to start position, to make room for downward shift)
+        const startValue = this._arrayList[startIndex];
+        this._arrayList[startIndex] = this._arrayList[pivotIndex - 1];
+        this._arrayList[pivotIndex - 1] = this._arrayList[pivotIndex];
+        this._arrayList[pivotIndex] = startValue;
+
+        // Move down pivot index
+        pivotIndex--;
+      }
+    }
+
+    // We can be sure pivot value is now in the correct index.
+
+    // If values remain to the left of the pivot's final position, continue sorting left half
+    if (pivotIndex > initialStartIndex) {
+      this._quickSort(0, pivotIndex - 1, comparator);
+    }
+
+    // If values remain to the right of the pivot's final position, continue sorting right half
+    if (pivotIndex < initialPivotIndex) {
+      this._quickSort(pivotIndex + 1, this._size - 1, comparator);
+    }
+  }
+
   /**
    *  Helper method to increase size of fixed array as needed when inserting, appending, or prepending.
    */
-  increaseArraySize() {
+  _increaseArraySize() {
     // Double size of array...
     this._capacity *= 2;
     let largerArray = getFixedArray(this._capacity);
