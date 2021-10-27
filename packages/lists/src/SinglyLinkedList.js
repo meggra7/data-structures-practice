@@ -371,8 +371,12 @@ class SinglyLinkedList {
 
     // Only sort if more than one value in list
     if (this.size() > 1) {
-      // Bubble sort option
-      this._bubbleSort(comparator);
+
+      // // Bubble sort option
+      // this._bubbleSort(comparator);
+
+      // Merge sort option
+      this._head = this._mergeSort(this._head, comparator);
     }
   }
 
@@ -480,6 +484,80 @@ class SinglyLinkedList {
         currentNode = currentNode.next;
       }
       iterationsRemaining--;
+    }
+  }
+
+  _mergeSort(startNode, comparator) {
+
+    // Only sort if list has two or more elements
+    if (startNode != null && startNode.next != null) {
+
+      // Find midpoint by iterating through lists at two speeds, one twice as fast as the other
+      let slow = startNode, fast = startNode;
+      // Iterate until fast iteration reaches the end of the list
+      while (fast.next != null && fast.next.next != null) {
+        slow = slow.next;
+        fast = fast.next.next;
+      }
+      // This means the slow iteration will have travelled roughly halfway through the list, and is used to set our midpoint
+      let midpoint = slow.next;
+      // Nullify the connection immediately before the midpoint, to effectively split the list in half
+      slow.next = null;
+
+      // Sort each half recursively
+      let leftNode = this._mergeSort(startNode, comparator);
+      let rightNode = this._mergeSort(midpoint, comparator);
+
+      // Merge sorted halves back together. 
+      // Initialize new head
+      let headAfterSorting = null;
+
+      // Assign lowest value node from either half to new head
+      if (comparator(leftNode.item, rightNode.item) < 0) {
+        headAfterSorting = leftNode;
+        leftNode = leftNode.next;
+      } else {
+        headAfterSorting = rightNode;
+        rightNode = rightNode.next;
+      }
+
+      // Initialize current node for rebuilding
+      let currentNode = headAfterSorting;
+
+      // Walk through each half and add lowest values in order
+      while (leftNode !== null && rightNode !== null) {
+
+        if (comparator(leftNode.item, rightNode.item) < 0) {
+          // Append left node and walk current node forward
+          currentNode.next = leftNode;
+          currentNode = currentNode.next;
+
+          // Walk left node forward as well
+          leftNode = leftNode.next;
+        } else {
+          // Append right node and walk current node forward
+          currentNode.next = rightNode;
+          currentNode = currentNode.next;
+
+          // Walk right node forward as well
+          rightNode = rightNode.next;
+        }
+      }
+
+      if (leftNode !== null) {
+        // Append left node and you're done (no need to walk further, remaining values are already linked)
+        currentNode.next = leftNode;
+      }
+
+      if (rightNode !== null) {
+        // Append right node and you're done (no need to walk further, remaining values are already linked)        
+        currentNode.next = rightNode;
+      }
+
+      return headAfterSorting;
+
+    } else {
+      return startNode;
     }
   }
 }
