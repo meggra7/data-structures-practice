@@ -434,8 +434,12 @@ class DoublyLinkedList {
    */
   sort(comparator) {
 
-    // Bubble sort option
-    this._bubbleSort(comparator);
+    // // Bubble sort option
+    // this._bubbleSort(comparator);
+
+    // Merge sort option
+    this._head = this._mergeSort(this._head, comparator);
+    this._resetHeadAndTail();
   }
 
   /**
@@ -570,6 +574,125 @@ class DoublyLinkedList {
     const tmp = node.item;
     node.item = node.next.item;
     node.next.item = tmp;
+  }
+
+  _mergeSort(startNode, comparator) {
+
+    // Only sort if at least two items in list
+    if (startNode != null && startNode.next != null) {
+
+      // Split list and get midpoint
+      const midPoint = this._split(startNode);
+
+      // Recursively sort each half of the list
+      let sortedLeftHalf = this._mergeSort(startNode, comparator);
+      let sortedRightHalf = this._mergeSort(midPoint, comparator);
+
+      // Merge sorted halves and return new head
+      return this._merge(sortedLeftHalf, sortedRightHalf, comparator);
+
+    } else {
+      return startNode;
+    }
+  }
+
+  _split(startNode) {
+
+    // Initialize slow and fast pointers
+    let slow = startNode, fast = startNode;
+
+    // Step fast pointer forward twice as quickly as slow pointer
+    while (fast != null && fast.next != null) {
+      slow = slow.next;
+      fast = fast.next.next;
+    }
+
+    // Slow pointer will have traversed roughly halfway through the list, and marks the mid point
+    const midPoint = slow;
+
+    // Nullify references prior to midpoint to effectively split list
+    midPoint.prev.next = null;
+    midPoint.prev = null;
+
+    // Return midpoint as the start of the second half of the list
+    return midPoint;
+  }
+
+  _merge(left, right, comparator) {
+
+    // Initialize new head
+    let newHead = null;
+
+    // Assign lowest value from either half as the head
+    if (comparator(left.item, right.item) < 0) {
+      newHead = left;
+      left = left.next;
+    } else {
+      newHead = right;
+      right = right.next;
+    }
+
+    // Initialize current node as head
+    let currentNode = newHead;
+
+    // While values remain on both halves, add the lowest value as current node's next
+    while (left != null && right != null) {
+
+      if (comparator(left.item, right.item) < 0) {
+
+        // Cross reference current node with left node to attach it
+        currentNode.next = left;
+        left.prev = currentNode;
+
+        // Step left node forward
+        left = left.next;
+
+      } else {
+
+        // Cross reference current node with right node to attach it
+        currentNode.next = right;
+        right.prev = currentNode;
+
+        // Step right node forward
+        right = right.next;
+
+      }
+
+      // Step current node forward
+      currentNode = currentNode.next;
+
+    }
+
+    // Once values remain in one side only, connect that side 
+    if (left != null) {
+      currentNode.next = left;
+      left.prev = currentNode;
+    }
+    if (right != null) {
+      currentNode.next = right;
+      right.prev = currentNode;
+    }
+
+    return newHead;
+  }
+
+  /**
+   * After merge sort, make sure head and tail references are accurate
+   */
+  _resetHeadAndTail() {
+
+    // Only need to reset if at least two items. Otherwise head and tail will have remained the same (both null or both same node)
+    if (this._head !== null && this._head.next !== null) {
+
+      this._tail = this._head;
+      while (this._tail.next !== null) {
+        this._tail = this._tail.next;
+      }
+
+      // Nullify outward pointing references
+      this._head.prev = null;
+      this._tail.next = null;
+    }
   }
 }
 
