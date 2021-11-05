@@ -324,7 +324,11 @@ class ArrayList {
    *  @spaceComplexity O(1)
    */
   peekFirst() {
-    return this._arrayList[0];
+    if (this._size > 0) {
+      return this._arrayList[0];
+    } else {
+      return null;
+    }
   }
 
   /**

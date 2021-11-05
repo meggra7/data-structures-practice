@@ -7,7 +7,7 @@ const userImplementations = [
 ];
 const testSortedListImplementation = require('./testSortedListImplementation');
 
-describe('Array', () => {
+xdescribe('Array', () => {
   getTestSet(userImplementations, referenceImplementations)
     .forEach(testSortedListImplementation)
 });

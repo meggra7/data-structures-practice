@@ -56,8 +56,9 @@ class DoublyLinkedList {
         next: previousNode.next
       }
 
-      // Update previous node to reference the new node
+      // Update previous & next nodes to reference the new node
       previousNode.next = newNode;
+      newNode.next.prev = newNode;
 
       // Increase length
       this._length++;

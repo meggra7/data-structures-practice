@@ -64,7 +64,7 @@ class StackUsingArray {
      *  @spaceComplexity O(1)
      */
     peek() {
-        if (this._stack.length !== 0) {
+        if (this._nextIndex !== 0) {
             return this._stack[this._nextIndex - 1];
         } else {
             throw new Error("Error peeking at stack; stack is empty.")
