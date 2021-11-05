@@ -12,7 +12,6 @@ const referenceImplementations = [
 ];
 
 const userImplementations = [
-  require('../src/Stack'),
   require('../src/StackUsingArray'),
   require('../src/StackUsingLinkedList')
 ];
