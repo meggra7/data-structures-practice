@@ -6,6 +6,10 @@ Output a sorted list.
 
 
 def bubblesort(array):
+    # when doing bubble sort, I often clean it up as a pair of for loops, rather than using while loops:
+    # for first_sorted_index in range(len(array) - 1, 0, -1):
+    #    for current_postition in range(first_sorted_index):
+    # This is strictly sugar for what you're already doing, but it can help clarify the actual number of loops you're making.
 
     final_index_to_sort = len(array) - 1
     while final_index_to_sort > 0:
@@ -17,6 +21,17 @@ def bubblesort(array):
             next_value = array[current_position + 1]
 
             if current_value > next_value:
+                # When sorting on an array - especially when doing it in an academic context, I usually introduce a `swap`
+                # function with a signature something like (arr, int, int) -> arr.  For in-place algorithms, like this one,
+                # I often just use (arr, int, int) -> void.  That would make this section look something like
+                # if array[current_position] > array[current_position + 1]
+                #   swap(array, current_position, current_position + 1)
+                # You could even pull out the next position calculation to make it even more clear:
+                #
+                # next_position = current_position + 1
+                # if array[current_position] > array[next_position]:
+                #   swap(array, current_position, next_position)
+                
                 array[current_position] = next_value
                 array[current_position + 1] = current_value
 
