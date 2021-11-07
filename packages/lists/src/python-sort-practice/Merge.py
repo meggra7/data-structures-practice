@@ -18,6 +18,7 @@ def mergesort(array):
 
         # Combine halves back into one for return
         combined_array = []
+        # I might name these something like first_unmerged_left and first_unmerged_right
         left_pointer = 0
         right_pointer = 0
 
@@ -33,6 +34,11 @@ def mergesort(array):
                 right_pointer += 1
 
         # While values remain in left half only, add remaining left values:
+        # So, these while loops are essential in languages that don't have slicing, and I _love_
+        # that you noticed you don't _also_ need an if here - a lot of people don't.  But you can also
+        # do all of this in one line by using slices:
+        # return combined_array + left_array[left_pointer:] + right_array[right_pointer:]
+        # Let the language work for you!
         while left_pointer < len(left_array):
             combined_array.append(left_array[left_pointer])
             left_pointer += 1
